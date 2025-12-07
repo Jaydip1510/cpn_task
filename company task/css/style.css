@@ -1,0 +1,2533 @@
+/* =========================================
+   1. VARIABLES & THEME SETUP
+   ========================================= */
+:root {
+    --color-black:      #000000;
+    --color-dark-grey:  #353535;
+    --color-gold:       #FBAD18; 
+    --color-white:      #ffffff;
+    --color-light-grey: #f2f2f2;
+    --color-text-grey:  #555555;
+
+    --font-primary:     'Cormorant', serif;    
+    --font-secondary:   'Heebo', sans-serif;   
+
+    --nav-height:       90px; /* Taller header for logo + tagline */
+    --max-width:        1400px;
+    --transition:       0.3s ease;
+
+    --feature-item-width: 100px;
+    --feature-item-display-count: 7; /* Number of items to scroll through */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--color-white); /* Changed to white for clean landing */
+    color: var(--color-black);
+    font-family: var(--font-secondary);
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; transition: var(--transition); }
+ul { list-style: none; }
+/* =========================================
+   2. HEADER STYLES (Left - Center - Right)
+   ========================================= */
+.hm-site-header {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: var(--nav-height);
+    background-color: var(--color-white);
+    z-index: 1000;
+    display: flex; align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.hm-nav-container {
+    width: 95%; 
+    max-width: var(--max-width); 
+    margin: 0 auto;
+    
+    /* CSS GRID FOR PERFECT CENTERING */
+    display: grid;
+    /* Column 1 (Left), Column 2 (Center-Auto), Column 3 (Right) */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+}
+
+/* --- 1. LEFT: LOGO --- */
+.logo {
+    justify-self: start; /* Pushes logo to the far left */
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-black);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.gold-h { color: var(--color-gold); font-size: 2.2rem; }
+
+.logo .tagline {
+    font-family: var(--font-secondary);
+    font-size: 0.65rem;
+    color: var(--color-text-grey);
+    text-transform: none;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+    margin-left: 5px;
+}
+
+/* --- 2. CENTER: CONTACT & ICONS --- */
+.hm-contact-center {
+    justify-self: center; /* Pushes this group to the exact middle */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    color: var(--color-text-grey);
+
+    letter-spacing: 1px;
+}
+
+.hm-contact-center span {
+    line-height: 1; /* Fix vertical alignment */
+}
+
+.hm-separator {
+    color: #ddd; /* Light grey divider */
+    font-size: 14px;
+}
+
+.hm-social-icons-top-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.hm-social-icons-top-bar a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-grey);
+    transition: var(--transition);
+}
+
+.hm-social-icons-top-bar i {
+    font-size: 16px;
+}
+
+.hm-social-icons-top-bar a:hover { color: var(--color-black); }
+
+
+/* --- 3. RIGHT: HAMBURGER --- */
+.hamburger {
+    justify-self: end; /* Pushes hamburger to the far right */
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    width: 30px;
+    height: 30px;
+}
+
+.bar {
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-black);
+    transition: var(--transition);
+}
+
+.hamburger:hover .bar { background-color: var(--color-gold); }
+
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 900px) {
+    /* On mobile/tablet, hide the center contact info */
+    .desktop-only {
+        display: none;
+    }
+    
+    /* Change Grid to 2 columns (Left & Right) */
+    .hm-nav-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* =========================================
+   3. MENU OVERLAY (Full White & Grid Header)
+   ========================================= */
+.menu-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    
+    background-image: url(../assets/images/overlay-background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: rgb(255, 255, 255);
+    background-color: var(--color-white);
+    
+    z-index: 2000;
+    display: flex; flex-direction: column;
+    
+    /* Animation State */
+    opacity: 0; 
+    visibility: hidden;
+    
+}
+
+.menu-overlay.active {
+    opacity: 1; visibility: visible;
+}
+
+/* OVERLAY HEADER */
+/* Note: By adding the class .hm-nav-container in HTML, 
+   it automatically inherits the Grid (1fr auto 1fr) from the main header styling. 
+   We just need to ensure heights match. */
+
+.overlay-header {
+    width: 95%; 
+    max-width: var(--max-width); 
+    margin: 0 auto;
+    height: var(--nav-height); /* Matches main header height */
+    align-items: center;
+    /* Grid layout is inherited from .hm-nav-container class in HTML */
+}
+
+/* RIGHT SIDE (Close Button Container) */
+.overlay-right {
+    justify-self: end; /* Pushes X to the far right */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 30px; /* Match width of hamburger area for perfect alignment */
+}
+
+/* CLOSE BUTTON STYLE */
+.close-btn {
+    font-size: 1.8rem; /* Slightly larger X */
+    color: var(--color-black);
+    cursor: pointer;
+    line-height: 1;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover { 
+    color: var(--color-gold); 
+    transform: rotate(90deg); 
+}
+
+/* CENTERED NAV LINKS */
+.overlay-nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.overlay-nav ul {
+    text-align: center;
+    display: flex; flex-direction: column;
+    gap: 30px;
+}
+
+.overlay-nav a {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 2.2rem; 
+    color: var(--color-text-grey);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 10px 30px;
+    display: inline-block;
+    transition: var(--transition);
+    border: 1px solid transparent; /* Reserve border space */
+}
+
+.overlay-nav a:hover {
+    color: var(--color-black);
+}
+
+/* ACTIVE STATE: GOLD BOX */
+.overlay-nav li.active a {
+    color: var(--color-gold);
+    border: 1px solid var(--color-gold);
+}
+
+/* RESPONSIVE FOR OVERLAY */
+@media (max-width: 900px) {
+    /* If the main header hides contact info on mobile, 
+       we might want to hide it here too to match layout exactly, 
+       OR keep it. To match the main header's behavior: */
+    .overlay-header .hm-contact-center {
+        display: none; 
+    }
+    
+    /* Grid automatically adjusts to 2 columns via .hm-nav-container media query */
+    
+    .overlay-nav a { font-size: 1.6rem; }
+}
+
+/* =========================================
+   4. HERO SLIDER STYLES
+   ========================================= */
+.hm-hero-slider-section {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full Viewport Height */
+    overflow: hidden;
+    background-color: var(--color-black);
+}
+
+.hm-slider-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- INDIVIDUAL SLIDE --- */
+.slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 1s ease-in-out;
+    z-index: 1;
+}
+
+.slide.active {
+    opacity: 1; /* Visible */
+    z-index: 2;
+}
+
+.slide-bg-1 {
+    background-image: url('../assets/images/slider1.jpg');
+}
+
+.slide-bg-2 {
+    background-image: url('../assets/images/slider2.png');
+}
+
+.slide-bg-3 {
+    background-image: url('../assets/images/slider2.png');
+}
+
+/* Ensure the common properties remain on the base class */
+.slide-bg {
+    width: 100%; 
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.85); 
+    transform: scale(1);
+    transition: transform 6s ease;
+}
+
+/* --- HERO CONTENT (Text) --- */
+.hero-content {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%); /* Perfect Center */
+    text-align: center;
+    z-index: 3;
+    width: 90%;
+    max-width: 800px;
+}
+
+/* Typography matching "Opulently Graceful" */
+.slide-title {
+    font-family: var(--font-primary); /* Cormorant */
+    font-size: 3.5rem;
+    font-weight: 700; /* Regular weight looks more elegant */
+    color: var(--color-white);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    opacity: 0; 
+    transform: translateY(20px);
+    transition: all 0.8s ease 0.3s; /* Delay for staggered entrance */
+}
+
+.slide-subtitle {
+    font-family: var(--font-secondary); /* Heebo */
+    font-size: 0.8rem;
+    color: var(--color-white);
+    text-transform: uppercase;
+    letter-spacing: 10px; /* Wide spacing */
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease 0.5s;
+}
+
+/* Button Style */
+.btn-outline {
+    display: inline-block;
+    padding: 12px 30px;
+    border: 1px solid var(--color-gold);
+    color: var(--color-white);
+    font-family: var(--font-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease, opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
+}
+
+.btn-outline:hover {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+}
+
+/* Reveal Text when Slide is Active */
+.slide.active .slide-title,
+.slide.active .slide-subtitle,
+.slide.active .btn-outline {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- SLIDER CONTROLS --- */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    padding: 20px;
+    transition: 0.3s;
+}
+.slider-btn:hover { color: var(--color-gold); }
+.prev-btn { left: 20px; }
+.next-btn { right: 20px; }
+
+/* Dots at bottom */
+.slider-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+.dot {
+    width: 10px; height: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.dot.active { background-color: var(--color-gold); transform: scale(1.2); }
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .slide-title { font-size: 2.2rem; }
+    .slide-subtitle { letter-spacing: 2px; font-size: 0.7rem; }
+}
+
+/* --- 3. HEADER RIGHT (Cleaned up) --- */
+.header-right {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+}
+/* --- SLIDE SPECIFIC QUOTE BUTTON --- */
+.slide-quote-btn {
+    position: absolute;
+    
+    /* FIX: Push it down below the 90px fixed header */
+    top: 130px; 
+    right: 5%;
+    
+    z-index: 20; /* Ensure it's above the slide background */
+    
+    background-color: var(--color-gold);
+    color: var(--color-white);
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 24px;
+    
+    /* Animation: Fade in */
+    opacity: 0; 
+    transform: translateY(-20px);
+    transition: all 0.3s ease, opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;
+    
+    /* Optional: Add a subtle shadow to make it pop against the image */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Hover Effect */
+.slide-quote-btn:hover {
+    background-color: var(--color-black);
+    color: var(--color-gold);
+    cursor: pointer;
+}
+
+/* When Slide is Active, Show Button */
+.slide.active .slide-quote-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mobile Adjustment */
+@media (max-width: 768px) {
+    .slide-quote-btn {
+        /* On mobile, the header might be smaller, but 110px is safe */
+        top: 110px; 
+        right: 20px;
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+}
+
+/* =========================================
+   5. GENERAL SECTION UTILITIES
+   ========================================= */
+/* Reusable container for content width */
+.section-container {
+    width: 90%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+/* =========================================
+   6. ONE-STOP INTERIORS SECTION
+   ========================================= */
+
+/* --- Part 1: Header Text --- */
+.hm-section-header-wrapper {
+    background-color: var(--color-white);
+    padding: 80px 0 60px 0;
+}
+.hm-section-body-container {
+    width: 61%;
+    margin: 0 auto;
+}
+
+.hm-section-body-title {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Title takes less space than content */
+    gap: 50px;
+    align-items: start;
+}
+
+/* Typography */
+.gold-section-title {
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 2.5rem;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: -5px;
+}
+
+.hm-section-body-content p {
+    font-family: var(--font-secondary);
+    color: var(--color-text-grey);
+    margin-bottom: 30px;
+    max-width: 600px; /* Prevents text from getting too wide */
+}
+
+/* Gold Outline Button */
+.btn-gold-outline {
+    display: inline-block;
+    padding: 10px 30px;
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold);
+    font-family: var(--font-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.btn-gold-outline:hover {
+    background-color: var(--color-gold);
+    color: var(--color-white);
+}
+
+
+/* --- Part 2: Image Grid --- */
+.one-stop-grid-wrapper {
+    background-color: var(--color-light-grey);
+    padding: 80px 0;
+}
+
+.four-col-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+/* Grid Item Styling */
+.grid-item {
+    text-align: center;
+}
+
+.img-box.rounded {
+    border-radius: 16px; /* Matching the reference image rounded corners */
+    overflow: hidden;
+    aspect-ratio: 3 / 4; /* Enforces a portrait rectangle shape */
+    margin-bottom: 20px;
+}
+
+.img-box.rounded img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* Subtle hover effect on images */
+.grid-item:hover img {
+    transform: scale(1.05);
+}
+
+.grid-item h3 {
+    font-family: var(--font-primary);
+    color: var(--color-dark-grey);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+/* =========================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================= */
+
+/* Tablet Portrait (max-width: 900px) */
+@media (max-width: 900px) {
+    /* Stack header intro vertically */
+    .hm-section-body-title {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .hm-section-body-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Switch grid to 2 columns */
+    .four-col-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px 20px; /* Larger vertical gap */
+    }
+}
+
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+    .gold-section-title {
+        font-size: 2rem;
+    }
+    
+    /* Switch grid to 1 column */
+    .four-col-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Adjust padding for smaller screens */
+    .hm-section-header-wrapper, 
+    .one-stop-grid-wrapper {
+        padding: 50px 0;
+    }
+}
+/* =========================================
+   7. WHY CHOOSE US SECTION
+   ========================================= */
+
+.why-choose-section {
+    position: relative;
+    background-color: var(--color-white);
+    padding-top: 80px;
+    padding-bottom: 0;
+    overflow: hidden; /* Ensures sketches don't spill out */
+}
+
+/* --- DUAL BACKGROUND SKETCHES --- */
+
+/* 1. LEFT SKETCH (Lamp & Sofa) */
+.sketch-left {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 35%; /* Adjust width based on your image aspect ratio */
+    height: 80%;
+    
+    /* REPLACE WITH YOUR ACTUAL IMAGE PATH */
+    background-image: url('../assets/images/why-left-sketch.png'); 
+    
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+    opacity: 0.15; /* Transparency */
+    pointer-events: none; /* Click-through */
+    mix-blend-mode: multiply; /* Better blending on white */
+    z-index: 0;
+}
+
+/* 2. RIGHT SKETCH (Teapoy, Lamp & Sofa) */
+.sketch-right {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 35%;
+    height: 80%;
+    
+    /* REPLACE WITH YOUR ACTUAL IMAGE PATH */
+    background-image: url('../assets/images/why-right-sketch.png');
+    
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right center;
+    opacity: 0.15;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    z-index: 0;
+}
+
+/* --- FEATURES SLIDER --- */
+.features-slider-wrapper {
+    width: 100%;
+    background-color: transparent;
+    padding: 40px 0 80px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+/* Track Animation */
+.features-track {
+    display: flex;
+    width: calc(var(--feature-item-width) * var(--feature-item-display-count));
+    animation: scrollIcons 30s linear infinite;
+}
+
+/* Keyframes for Desktop */
+@keyframes scrollIcons {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-250px * 7)); }
+}
+
+/* Hover Pause */
+.features-track:hover {
+    animation-play-state: paused;
+}
+
+/* Individual Item */
+.feature-item {
+    width: 250px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 15px;
+}
+
+/* Icon Box */
+.icon-box {
+    width: 100%;
+    height: 90px; /* Fixed height for alignment */
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* No border */
+}
+
+/* Responsive Image Icon */
+.icon-box img {
+    width: 100%;
+    height: auto;
+    max-width: 80px; /* Max size for desktop */
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover .icon-box img {
+    transform: scale(1.1);
+}
+
+/* Text */
+.feature-text {
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-dark-grey);
+    text-transform: uppercase;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+}
+
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+    .sketch-left, .sketch-right {
+        opacity: 0.1; /* Fade background more on smaller screens */
+        width: 40%;
+    }
+}
+
+/* Mobile / Small Tablet (max-width: 900px) */
+@media (max-width: 900px) {
+    .why-header {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .why-text-col p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+    /* Backgrounds: Move to bottom or hide if too cluttered */
+    .sketch-left, .sketch-right {
+        opacity: 0.05;
+        width: 50%;
+        top: auto;
+        bottom: 0;
+        height: 200px;
+    }
+
+    /* Slider Adjustments */
+    .feature-item { width: 180px; }
+    .features-track { width: calc(180px * 14); }
+    
+    @keyframes scrollIcons {
+        100% { transform: translateX(calc(-180px * 7)); }
+    }
+    
+    .icon-box { height: 70px; }
+    .icon-box img { max-width: 60px; }
+    .feature-text { font-size: 0.75rem; }
+}
+/* =========================================
+   8. TOUR SECTION (Top Caption Slider)
+   ========================================= */
+
+.tour-section {
+    padding: 80px 0;
+    background-color: #fafafa;
+    overflow: hidden;
+}
+
+/* Header Styles */
+.tour-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.tour-header h2 { margin-bottom: 0; }
+.tour-title-gold{
+     font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: 1px;
+    margin-top: -5px;
+}
+.tour-section-container { /* Added container for better structure */
+    width: 70%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+/* Button Style */
+.btn-solid-gold {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 14px 35px;
+    border: none;
+    border-radius: 4px;
+    transition: var(--transition);
+    white-space: nowrap;
+    text-transform: none;
+}
+.btn-solid-gold:hover {
+    background-color: var(--color-black);
+    color: var(--color-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* --- Slider Wrapper --- */
+.tour-slider-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    padding-bottom: 30px;
+    
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.tour-slider-wrapper::-webkit-scrollbar { display: none; }
+.tour-slider-wrapper:active { cursor: grabbing; }
+
+/* Track */
+.tour-track {
+    display: flex;
+    gap: 30px; /* Space between cards */
+    padding-left: calc((100% - var(--max-width)) / 2 + 5%);
+    padding-right: 5%;
+    width: max-content;
+}
+/* =========================================
+   8. TOUR SECTION (Refined Design)
+   ========================================= */
+
+.tour-section {
+    padding: 60px 0 80px 0;
+    background-color:var(--color-light-grey);
+    overflow: hidden;
+}
+
+/* --- Header Layout --- */
+.tour-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Reduced margin so label is closer */
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Title (Gold) */
+.tour-header h2.gold-section-title {
+    margin-bottom: 0;
+    color: var(--color-gold); /* Ensure it matches reference */
+    /* If you need specifically 'Homozinterio' in different color, use span */
+}
+
+/* Button (Solid Gold) */
+.btn-solid-gold {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 2px; /* Slight roundness */
+    transition: var(--transition);
+    white-space: nowrap;
+    text-transform: none; /* Sentence case */
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-solid-gold:hover {
+    background-color: var(--color-black);
+    color: var(--color-gold);
+}
+
+
+/* --- Slider Styles --- */
+.tour-slider-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    padding-top: 10px; /* Space for labels */
+    padding-bottom: 30px;
+    
+    /* Hide scrollbars */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.tour-slider-wrapper::-webkit-scrollbar { display: none; }
+.tour-slider-wrapper:active { cursor: grabbing; }
+
+
+/* Track Alignment */
+.tour-track {
+    display: flex;
+    gap: 20px; /* Gap between cards */
+    padding-left: calc((100% - var(--max-width)) / 2 + 5%);
+    padding-right: 5%;
+    width: max-content;
+    
+    /* CRITICAL: Aligns images to the bottom line */
+    align-items: flex-end; 
+}
+
+
+/* --- Slider Item Container --- */
+.tour-item {
+    display: flex;
+    flex-direction: column;
+    width: 280px; /* Fixed card width */
+    flex-shrink: 0;
+}
+
+
+/* --- Category Label (Above Image) --- */
+.category-top-label {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    /* Purple/Lavender Color from image */
+    color: #C5A3FF; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px; /* Space between text and image */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cat-icon {
+    font-size: 1rem;
+    color: #C5A3FF;
+}
+
+
+/* --- Card Image Box --- */
+.tour-card-image {
+    width: 100%;
+    height: 400px; /* Fixed height for consistency */
+    border-radius: 20px; /* Large rounded corners */
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    background-color: #ddd;
+}
+
+.tour-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    transition: transform 0.5s ease;
+}
+
+/* Hover Effect */
+.tour-card-image:hover img {
+    transform: scale(1.05);
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+    .tour-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .tour-track {
+        padding-left: 5%;
+    }
+}
+
+@media (max-width: 600px) {
+    .tour-item { width: 240px; }
+    .tour-card-image { height: 320px; }
+    .category-top-label { font-size: 0.9rem; }
+}
+/* =========================================
+   9. DESIGN PROCESS SECTION (Background Image)
+   ========================================= */
+
+.process-section {
+    position: relative;
+    /* Top padding for spacing, Bottom padding to show the background image */
+    padding: 80px 0 600px 0; 
+    
+    background-color: #fcfcfc;
+    
+    /* BACKGROUND IMAGE CONFIGURATION */
+    background-image: url('../assets/images/illustrations/designer-working.png'); 
+    background-repeat: no-repeat;
+    background-position: bottom center; /* Sits at the bottom */
+    
+    /* Adjust size: prevent it from being too huge */
+    background-size: cover;
+}
+
+/* --- Timeline Container --- */
+.process-timeline {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* No bottom margin needed now, padding handles spacing */
+    padding: 0 20px;
+    z-index: 2; /* Ensures timeline sits ON TOP of background */
+}
+
+/* The Dashed Line Background */
+.timeline-line {
+    position: absolute;
+    top: 40px; 
+    left: 50px; 
+    right: 50px; 
+    height: 2px;
+    border-top: 2px dashed #ccc;
+    z-index: 0;
+}
+
+/* Individual Step Wrapper */
+.process-step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 140px; 
+    text-align: center;
+}
+
+/* Circular Number */
+.step-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    font-size: 2rem;
+    background-color: #e0e0e0;
+    color: var(--color-black);
+    transition: var(--transition);
+}
+
+/* ACTIVE STATE */
+.process-step.active .step-circle {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+    box-shadow: 0 4px 10px rgba(251, 173, 24, 0.3);
+}
+
+/* Text Labels */
+.step-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-dark-grey);
+}
+
+.step-label {
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.step-arrow {
+    color: var(--color-gold);
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.process-step:last-child .step-arrow { display: none; }
+
+
+/* --- Responsive Adjustments --- */
+
+/* Tablet */
+@media (max-width: 900px) {
+    .step-circle {
+        width: 60px; height: 60px; font-size: 1.5rem;
+    }
+    .timeline-line { top: 30px; }
+    .step-arrow { display: none; }
+    
+    /* Make background smaller on tablet */
+    .process-section {
+        padding-bottom: 350px;
+        background-size: auto 300px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .process-section {
+        /* Reduce padding, move image to fit */
+        padding-bottom: 250px;
+        background-size: auto 200px;
+    }
+
+    .process-timeline {
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 30px;
+        padding-left: 20px;
+    }
+
+    /* Vertical Line */
+    .timeline-line {
+        top: 40px; 
+        left: 49px; 
+        right: auto;
+        width: 2px;
+        height: calc(100% - 60px); 
+        border-top: none;
+        border-left: 2px dashed #ccc;
+    }
+
+    .process-step {
+        flex-direction: row; 
+        width: 100%;
+        text-align: left;
+        gap: 20px;
+    }
+    
+    .step-circle { flex-shrink: 0; }
+}
+
+/* =========================================
+   10. PORTFOLIO SECTION (Fixed Layout)
+   ========================================= */
+
+.portfolio-section {
+    padding: 80px 0;
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+/* Header */
+.portfolio-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.portfolio-header .title-col h2 { margin: 0; }
+.portfolio-header .text-col p {
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    color: #cccccc;
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+/* --- GRID LAYOUT --- */
+.portfolio-grid {
+    display: grid;
+    /* 3 Columns */
+    grid-template-columns: repeat(3, 1fr);
+    /* Fixed row height */
+    grid-auto-rows: 280px; 
+    gap: 20px;
+    margin-bottom: 50px;
+    
+    /* CRITICAL FIX: Packs items tightly, filling holes */
+    grid-auto-flow: dense; 
+}
+
+/* Items */
+.grid-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.5s ease, transform 0.3s ease;
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.grid-item:hover img { transform: scale(1.05); }
+
+/* Sizes */
+.item-large { grid-column: span 2; grid-row: span 2; }
+.item-wide { grid-column: span 2; }
+
+/* Hidden Utility */
+.initially-hidden { display: none; }
+
+/* Overlay */
+.grid-overlay {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.grid-item:hover .grid-overlay { opacity: 1; }
+.grid-overlay h3 {
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Button */
+.portfolio-footer { text-align: center; }
+.view-all-link {
+    display: inline-block;
+    color: var(--color-gold);
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+.view-all-link i {
+    display: block;
+    margin-top: 5px;
+    animation: bounce 2s infinite;
+}
+.view-all-link:hover { color: var(--color-white); }
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(5px); }
+    60% { transform: translateY(3px); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 220px; }
+    .item-large { grid-column: span 2; grid-row: span 2; height: 440px; }
+    /* On tablet, 'Wide' items reset to 1 column to avoid gaps in 2-col layout */
+    .item-wide { grid-column: auto; }
+}
+
+@media (max-width: 600px) {
+    .portfolio-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
+    .item-large, .item-wide { grid-column: auto; grid-row: auto; height: 250px; }
+}
+
+
+/* =========================================
+   11. TESTIMONIALS SECTION
+   ========================================= */
+
+.testimonials-section {
+    padding: 100px 0;
+    background-color: #fcfcfc; /* Light background */
+    background-image: url('../assets/images/testimonials.png'); 
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.testimonials-section-body{
+    padding: 70px 0 50px 0;
+}
+/* --- Slider Container --- */
+.testimonials-slider-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    padding-bottom: 40px;
+    
+    /* Hide Scrollbars */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.testimonials-slider-wrapper::-webkit-scrollbar { display: none; }
+.testimonials-slider-wrapper:active { cursor: grabbing; }
+
+
+/* --- Track --- */
+.testimonials-track {
+    display: flex;
+    gap: 30px;
+    /* Left padding to align first card with content */
+    padding-left: calc((100% - var(--max-width)) / 2 + 5%);
+    padding-right: 5%;
+    width: max-content;
+}
+
+
+/* --- Testimonial Card (Split Layout) --- */
+.testimonial-card {
+    display: flex;
+    width: 700px; /* Wide card */
+    height: 350px;
+    border-radius: 20px; /* Rounded corners */
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Left: Image */
+.client-img {
+    width: 45%;
+    height: 100%;
+}
+
+.client-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Right: Review Text */
+.client-review {
+    width: 55%;
+    background-color: #4a4a4a; /* Dark Grey Background */
+    color: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: var(--font-secondary);
+}
+
+.client-review p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #e0e0e0;
+}
+
+.client-name {
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: auto; /* Pushes name to bottom if text is short */
+}
+
+
+/* --- Responsive Adjustments --- */
+
+/* Tablet (max-width: 900px) */
+@media (max-width: 900px) {
+    .testimonials-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .testimonials-track {
+        padding-left: 5%;
+    }
+    
+    .testimonial-card {
+        width: 600px;
+        height: 320px;
+    }
+}
+
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+    /* Stack Card Vertically */
+    .testimonial-card {
+        flex-direction: column;
+        width: 300px;
+        height: auto; /* Allow height to grow */
+    }
+    
+    .client-img {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .client-review {
+        width: 100%;
+        padding: 30px 20px;
+        height: auto;
+    }
+    
+    .client-review p {
+        font-size: 0.85rem;
+    }
+}
+
+/* =========================================
+   12. COSTING SECTION
+   ========================================= */
+
+.costing-section {
+    position: relative;
+    padding: 100px 0;
+    color: var(--color-white);
+    overflow: hidden;
+}
+
+/* Background Image with Dark Overlay */
+.costing-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Replace with your interior image */
+    background-image: url('../assets/images/costing-bg.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+/* Dark Overlay on top of image */
+.costing-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Very Dark overlay */
+}
+
+/* Content Container z-index fix */
+.costing-section .section-container {
+    position: relative;
+    z-index: 2;
+}
+
+/* --- Header --- */
+.costing-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    text-align: left;
+}
+
+.costing-header .gold-section-title {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.costing-header .text-col p {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    color: #cccccc;
+    line-height: 1.5;
+}
+
+
+/* --- Form Wrapper (The Dark Box) --- */
+.costing-form-wrapper {
+    background-color: rgba(30, 30, 30, 0.95); /* Dark Grey/Black Box */
+    border-radius: 12px;
+    padding: 60px 80px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Form Layout */
+.costing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Space between rows */
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 Columns */
+    gap: 60px;
+}
+
+/* --- Input Styles (Underline Only) --- */
+.input-group {
+    position: relative;
+    padding-top: 15px; /* Space for floating label */
+}
+
+.input-group input, 
+.input-group select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #555;
+    color: #fff;
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    padding: 10px 0;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+/* Floating Label Logic */
+.input-group label {
+    position: absolute;
+    top: 25px; /* Initial position */
+    left: 0;
+    color: #888;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Move label up when input has focus or value (using placeholder trick) */
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label,
+.input-group select:focus ~ .select-label,
+.input-group select:valid ~ .select-label {
+    top: 0;
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+/* --- Mobile Group Layout --- */
+.mobile-group {
+    display: flex;
+    align-items: flex-end; /* Align bottom borders */
+    gap: 15px; /* Gap between the +91 box and the number line */
+    width: 100%;
+}
+
+/* --- 1. The Country Code Box --- */
+.country-select-wrapper {
+    position: relative;
+    width: 70px; /* Fixed width for the box */
+    height: 40px;
+    border: 1px solid #ffffff; /* The White Border */
+    display: flex;
+    align-items: center;
+}
+
+.country-select {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    padding: 0 5px 0 10px; /* Left padding for text */
+    
+    /* Hide default system arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    z-index: 2; /* Sits above custom arrow */
+}
+
+/* Custom Tiny White Arrow */
+.select-arrow {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff;
+    font-size: 0.6rem; /* Small arrow size */
+    pointer-events: none; /* Click passes through to select */
+    z-index: 1;
+}
+
+/* Dropdown Options (Dark Background) */
+.country-select option {
+    background-color: #222; /* Dark background */
+    color: #fff;            /* White text */
+    padding: 10px;
+}
+
+/* --- 2. The Mobile Number Input --- */
+.mobile-input-wrapper {
+    position: relative;
+    flex: 1; /* Takes remaining width */
+    border-bottom: 1px solid #555; /* The Grey Underline */
+}
+
+.mobile-input-wrapper input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    padding: 10px 0;
+    outline: none;
+}
+
+/* Floating Label Logic */
+.mobile-label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    color: #cccccc;
+    font-family: var(--font-secondary);
+    pointer-events: none;
+    transition: 0.3s ease;
+}
+
+/* Move label up when focused or has value */
+.mobile-input-wrapper input:focus ~ .mobile-label,
+.mobile-input-wrapper input:not(:placeholder-shown) ~ .mobile-label {
+    top: -15px;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+/* Focus State: Gold Underline */
+.mobile-input-wrapper input:focus {
+    border-bottom: 1px solid var(--color-gold); /* Optional gold highlight */
+}
+
+
+/* --- Radio Buttons --- */
+.radio-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.radio-label {
+    font-family: var(--font-secondary);
+    color: #fff;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.radio-options {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.custom-radio {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    color: #ccc;
+    position: relative;
+    padding-left: 30px;
+    user-select: none;
+}
+
+/* Hide default radio */
+.custom-radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Custom Circle */
+.checkmark {
+    position: absolute;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: transparent;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+/* When checked */
+.custom-radio input:checked ~ .checkmark {
+    border-color: #fff;
+}
+.custom-radio input:checked ~ .checkmark::after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 3px; left: 3px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+
+/* --- Submit Button --- */
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-block-gold {
+    background-color: var(--color-gold);
+    color: var(--color-white);
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 15px 60px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-block-gold:hover {
+    background-color: #dcb343; /* slightly darker gold */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(251, 173, 24, 0.3);
+}
+
+/* Specific styling for the Select Dropdown */
+.input-group select {
+    width: 100%;
+    /* Keep background transparent for the main input */
+    background-color: transparent; 
+    border: none;
+    border-bottom: 1px solid #555;
+    color: #fff;
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    padding: 10px 10px 10px 10px; /* Extra right padding for the arrow */
+    outline: none;
+    transition: border-color 0.3s;
+    cursor: pointer;
+    border-radius: 0;
+    margin: 0 10px 0 0;
+    
+    /* REMOVE DEFAULT BROWSER ARROW */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* ADD CUSTOM WHITE ARROW (SVG) */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 top 50%;
+    background-size: 10px auto;
+
+}
+
+
+/* CRITICAL FIX: Style the Dropdown Options when opened */
+.input-group select option {
+    background-color: #333; /* Dark background so white text is visible */
+    color: #fff;            /* White text */
+    padding: 10px;
+}
+.input-group select option:hover {
+    background-color: var(--color-gold); /* Dark background so white text is visible */
+    color: #fff;            /* White text */
+    padding: 10px;
+}
+/* --- Responsive --- */
+@media (max-width: 900px) {
+    .costing-form-wrapper {
+        padding: 40px 30px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr; /* Stack inputs vertically */
+        gap: 30px;
+    }
+    
+    .radio-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .costing-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .radio-options {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn-block-gold {
+        width: 100%;
+    }
+}
+/* =========================================
+   13. BLOG SECTION (Collage Layout)
+   ========================================= */
+.blog-section {
+    background-color: var(--color-white);
+}
+
+.blog-grid {
+    display: grid;
+    /* Split: Text (40%) | Images (60%) */
+    grid-template-columns: 0.8fr 1.2fr; 
+    gap: 60px;
+    align-items: center;
+}
+
+/* Text Side */
+.blog-content .gold-section-title {
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    line-height: 1.2;
+}
+
+.blog-content p {
+    font-family: var(--font-secondary);
+    color: var(--color-text-grey);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 350px;
+}
+
+/* Image Collage Side (Grid) */
+.blog-collage {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 Columns */
+    gap: 20px;
+}
+
+.collage-item {
+    height: 250px; /* Fixed height for top images */
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.collage-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* Bottom Item Spans Full Width */
+.collage-item.item-wide {
+    grid-column: span 2;
+    height: 300px; /* Slightly taller for the wide shot */
+}
+
+/* Hover Effect */
+.collage-item:hover img {
+    transform: scale(1.05);
+}
+
+
+/* =========================================
+   14. PARTNERS SECTION
+   ========================================= */
+.partners-section {
+    background-color: var(--color-white);
+}
+/* Apply borders to the inner container instead */
+.partners-section .section-container {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    
+    /* Add padding inside the borders */
+    padding: 60px 0; 
+    margin: 60px auto; /* Adds spacing from the Blog and FAQ sections */
+}
+.partners-title {
+    text-align: center;
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 2rem;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.partners-logos {
+    display: flex;
+    justify-content: space-between; /* Spreads logos evenly */
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    max-width: 1000px; 
+    margin: 0 auto;
+}
+
+.partner-logo {
+    height: 50px; /* Uniform height constraint */
+    width: auto;
+    object-fit: contain;
+    /* Optional: Grayscale until hover */
+    /* filter: grayscale(100%); opacity: 0.6; */
+    transition: all 0.3s ease;
+}
+
+.partner-logo:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+
+/* =========================================
+   15. FAQ SECTION
+   ========================================= */
+.faq-container{
+    width: 65%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+   }
+.faq-section {
+    padding: 80px 0;
+    background-color: var(--color-white);
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr; /* Match Blog layout ratio */
+    gap: 60px;
+    align-items: flex-start;
+}
+
+/* FAQ Text Side */
+.faq-header .gold-section-title {
+    margin-bottom: 15px;
+}
+
+.faq-header p {
+    font-family: var(--font-secondary);
+    color: var(--color-text-grey);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 300px;
+}
+
+/* FAQ Accordion Styling */
+.faq-item {
+    border: 1px solid #ddd;
+    border-radius: 4px; /* Slight roundness */
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 20px;
+    text-align: left;
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-question i {
+    color: var(--color-gold);
+    transition: transform 0.3s ease;
+}
+
+/* Answer (Hidden by default) */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: #fafafa;
+}
+
+.faq-answer p {
+    padding: 0 20px 20px 20px;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Active State (via JS) */
+.faq-item.active {
+    border-color: var(--color-gold);
+}
+
+.faq-item.active .faq-question i {
+    transform: rotate(180deg); /* Flip arrow */
+}
+
+.faq-item.active .faq-answer {
+    max-height: 200px; /* Arbitrary large height for expansion */
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 900px) {
+    .blog-grid, .faq-grid {
+        grid-template-columns: 1fr; /* Stack vertically */
+        gap: 40px;
+    }
+    
+    .partners-logos {
+        justify-content: center;
+    }
+    
+    .faq-header {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .blog-collage {
+        grid-template-columns: 1fr; /* Stack images on small mobile */
+        gap: 15px;
+    }
+    .collage-item, .collage-item.item-wide {
+        height: 200px;
+        grid-column: span 1;
+    }
+    .partner-logo {
+        height: 25px;
+    }
+}
+/* =========================================
+   VISION CTA SECTION
+   ========================================= */
+
+.vision-section {
+    position: relative;
+    width: 100%;
+    /* Generous padding to create the large banner height */
+    padding: 180px 0;
+    
+    /* BACKGROUND IMAGE */
+    /* Replace with your local image: url('../assets/images/vision-bg.jpg'); */
+    background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Centers content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Dark Overlay */
+/* Ensures the gold text is readable regardless of the image brightness */
+.vision-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 1;
+}
+
+/* Content Container */
+.vision-content {
+    position: relative;
+    z-index: 2; /* Sits on top of overlay */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px; /* Space between Title and Button */
+}
+
+/* Typography */
+.vision-title {
+    font-family: var(--font-primary); /* Cormorant */
+    color: var(--color-gold);
+    font-size: 3.5rem; /* Large, impactful font size */
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Adds depth */
+}
+
+/* Custom Button for this section */
+.btn-vision-cta {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: capitalize; /* "Free Estimate" vs "FREE ESTIMATE" */
+    padding: 16px 50px; /* Wide, rectangular button */
+    border: none;
+    border-radius: 2px; /* Slight rounding like the image */
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.btn-vision-cta:hover {
+    background-color: #ffffff; /* White on hover for contrast */
+    color: var(--color-black);
+    transform: translateY(-3px);
+}
+
+
+/* --- Responsive Adjustments --- */
+
+@media (max-width: 900px) {
+    .vision-section {
+        padding: 120px 0;
+    }
+    .vision-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .vision-section {
+        padding: 100px 0;
+    }
+    .vision-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+    .btn-vision-cta {
+        padding: 14px 40px;
+        font-size: 0.9rem;
+    }
+}
+
+/* =========================================
+   3. OUR SERVICES SECTION
+   ========================================= */
+
+.services-section {
+    padding: 80px 0;
+    /* Dark Grey Background matching the image */
+    background-color: #1a1a1a; 
+    color: #ffffff;
+}
+
+/* --- Header --- */
+.services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.services-header .gold-section-title {
+    margin: 0;
+    font-size: 2.5rem;
+    color: var(--color-gold);
+}
+
+.services-header .text-col p {
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #cccccc; /* Light grey text */
+    max-width: 600px; /* Limits width for readability */
+}
+
+
+/* --- Grid Layout --- */
+.services-grid {
+    display: grid;
+    /* 4 Equal Columns */
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 60px 20px; /* larger vertical gap, smaller horizontal gap */
+    text-align: center;
+}
+
+/* Individual Item */
+.service-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Icon Container */
+.service-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Icon Image */
+.service-icon img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    /* Optional: Ensure icons are Gold if they are SVGs/PNGs 
+       If your images are already gold, remove the filter. */
+    /* filter: sepia(100%) saturate(500%) hue-rotate(5deg); */
+}
+
+.service-item h3 {
+    font-family: var(--font-secondary);
+    font-weight: 400; /* Thin font weight like image */
+    font-size: 0.9rem;
+    color: #666; /* Darker grey text for labels initially? */
+    /* Wait, image shows dark grey text on dark background? 
+       Actually, image shows light grey text. adjusting: */
+    color: #888888; 
+    text-transform: capitalize;
+}
+
+/* Hover Effect */
+.service-item:hover .service-icon img {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+.service-item:hover h3 {
+    color: var(--color-gold); /* Highlight text on hover */
+    transition: color 0.3s ease;
+}
+
+
+/* --- Responsive Adjustments --- */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 Columns */
+    }
+}
+
+/* Small Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+    .services-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 Columns */
+        gap: 40px;
+    }
+}
+
+/* Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr); /* Keep 2 cols for services usually looks better than 1 */
+        gap: 30px 10px;
+    }
+    
+    .gold-section-title {
+        font-size: 2rem;
+    }
+}
+/* =========================================
+   15. FOOTER SECTION (4-Column Layout)
+   ========================================= */
+
+.site-footer {
+    /* Light Beige / Marble Tint Background */
+    background-color: #fff9e6; 
+    background-image: url('../assets/images/footer-bg.png'); /* Replace with your local image path */
+    
+    background-repeat: no-repeat;
+    padding: 80px 0 30px 0;
+    color: #333;
+    font-family: var(--font-secondary);
+}
+
+/* --- Top Row: 4 Columns --- */
+.footer-top {
+    display: grid;
+    /* Define 4 distinct columns */
+    /* Brand | Links | Contact Info | Buttons */
+    grid-template-columns: 1.2fr 1.5fr 1fr 1fr; 
+    gap: 40px;
+    margin-bottom: 40px;
+    align-items: start;
+}
+
+/* Col 1: Brand */
+.footer-logo {
+    display: inline-flex;
+    flex-direction: column;
+    font-family: var(--font-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-black);
+    line-height: 1;
+    text-transform: uppercase;
+}
+.footer-logo .tagline {
+    font-size: 0.7rem;
+    font-family: var(--font-secondary);
+    text-transform: capitalize;
+    color: #555;
+    margin-top: 5px;
+    font-weight: 400;
+}
+
+/* Col 2 & 3: Headings */
+.footer-title {
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Col 2: Links Grid */
+.links-grid {
+    display: flex;
+    gap: 40px;
+}
+.links-grid ul {
+    list-style: none;
+    padding: 0;
+}
+.links-grid li {
+    margin-bottom: 10px;
+}
+.links-grid a {
+    text-decoration: none;
+    color: #444;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+.links-grid a:hover { color: var(--color-gold); }
+
+/* Col 3: Contact Info */
+.contact-item {
+    margin-bottom: 15px;
+}
+.contact-item .label {
+    display: block;
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 1rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+.contact-item a {
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Col 4: Buttons */
+.footer-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Align buttons to the right or stretch them? 
+       Image shows them full width of the column */
+}
+
+.btn-footer-gold {
+    background-color: var(--color-gold);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 12px 20px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    text-align: center;
+    transition: transform 0.3s;
+    width: 100%; /* Full width of column 4 */
+    display: block;
+}
+
+.btn-footer-gold:hover {
+    transform: translateY(-2px);
+    background-color: #e5a50a;
+}
+
+
+/* --- Divider --- */
+.footer-divider {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(0,0,0,0.1);
+    margin: 40px 0;
+}
+
+
+/* --- Bottom Row --- */
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 20px;
+}
+.footer-social a {
+    width: 40px; height: 40px;
+    border: 1px solid var(--color-gold);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    color: var(--color-gold);
+    transition: all 0.3s;
+}
+.footer-social a:hover {
+    background-color: var(--color-gold); color: #fff;
+}
+
+.footer-legal-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #555;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.legal-links { display: flex; gap: 30px; }
+.legal-links a { color: #555; transition: color 0.3s; }
+.legal-links a:hover { color: var(--color-gold); }
+
+
+/* --- Responsive --- */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+    .footer-top {
+        grid-template-columns: 1fr 1fr; /* Switch to 2x2 Grid */
+        gap: 50px;
+    }
+}
+
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+    .footer-top {
+        grid-template-columns: 1fr; /* Stack all 4 columns vertically */
+        gap: 40px;
+    }
+    
+    .footer-buttons {
+        align-items: stretch;
+    }
+    
+    .footer-legal-row {
+        flex-direction: column;
+        text-align: center;
+    }
+}
